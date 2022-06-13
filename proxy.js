@@ -5,7 +5,9 @@ let isUp = false;
 const ProxyPort = 8080;
 const DBURL = "localhost";
 const DBPORT = 27017;
-const maxEC2IdleTimeMs = 3000;
+//  6 seconds , but you can set any time you want
+const MaxEC2MinutesIdleTime = 0.1;
+const maxEC2IdleTimeMs = 60000 * MaxEC2MinutesIdleTime;
 console.log(`Process pid ${process.pid}`);
 let turnoff;
 proxy.createProxy(ProxyPort, DBURL, DBPORT, {

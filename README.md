@@ -28,10 +28,11 @@ node proxy.js
 #### Test your proxy
 
 This script will try to connect to a mongo url at localhost:8080 , but your proxy will hold for 28 seconds before starts inserting data. This happens because your proxy will make an http request simulating your attempt to turn aws EC2 on with AWS CLI. Once the EC2 is up, after 28 seconds it will redirect to your DB and will make A LOT of insertions.
+
 If you stop your activitiy of insertions for 3000 ms the proxy will understand that your EC2 needs to be shut down and will "make the command" (you need to do it with your AWS CLI).
 
 ```bash
-node index.js
+node query.js
 ```
 
 ### Deployment
