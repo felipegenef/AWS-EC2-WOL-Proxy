@@ -11,12 +11,6 @@ The idea here is to make something similar to a Serverless database where you pa
 docker-compose up -d
 ```
 
-#### Run the express server to simulate AWS response time of 28 secots to set the EC2 up
-
-```bash
-node handler.js
-```
-
 #### Run the proxy server
 
 With this command you are proxing all connections from localhost:27017 to localhost:8080

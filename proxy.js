@@ -32,7 +32,8 @@ proxy.createProxy(ProxyPort, DBURL, DBPORT, {
        */
 
       // Simulates delay for instance getting up and checking it with http
-      await axios.get("http://localhost:3000/");
+      // await axios.get("http://localhost:3000/");
+      await new Promise((resolve) => setTimeout(resolve, 28000));
       const date2 = new Date();
       console.log(`Turn EC2 on took : ${date2.getTime() - date.getTime()}ms`);
     }
