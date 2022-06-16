@@ -62,8 +62,12 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
         const data = await ec2Client.send(
           new DescribeInstancesCommand(paramsStart)
         );
-        const [firstInstance] = data.Reservations.Instances;
-        if (firstInstance) instanceStatus = firstInstance.State.Name;
+        console.log({ data });
+        const [firstReservation] = data.Reservations;
+        if (firstReservation) {
+          const [firstInstance] = firstReservation.Instances;
+          if (firstInstance) instanceStatus = firstInstance.State.Name;
+        }
 
         // sleep 1 second
         await new Promise((resolve) => setTimeout(resolve, 1000));
