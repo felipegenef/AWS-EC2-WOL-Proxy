@@ -1,9 +1,27 @@
 {
+  "name": "redirectpoc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:felipegenef/AWS-EC2-WOL-Proxy.git",
+  "author": "felipegenef <felipegenef@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "proxy": "node proxy.js",
+    "cluster": "node proxyClusters.js",
+    "http": "node handler.js",
+    "test": "npx autocannon -c 1000 -d 30 --renderStatusCodes --workers 10 --latency --warmup [-c 1 -d 1]  localhost:8080",
+    "test2": "npx autocannon -c 1000 -d 60 --workers 10  localhost:8080"
+  },
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.110.0",
     "cli-progress": "^3.11.1",
     "express": "^4.18.1",
+    "mmap-object": "^1.5.0",
     "mongoose": "^6.3.3",
     "node-tcp-proxy": "^0.0.27"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.44",
+    "autocannon": "^7.9.0"
   }
 }
