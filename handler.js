@@ -11,11 +11,9 @@ if (cluster.isMaster) {
 } else {
   app.get("/", async (req, res) => {
     try {
-      console.log("Received request");
-      res.status(200).json({ message: "AWS EC2 is up after 28 seconds" });
+      res.status(200).json({ message: "AWS EC2 is up and running" });
     } catch (error) {
-      console.log("Received request");
-      res.status(500).json({ message: "AWS EC2 is up after 28 seconds" });
+      res.status(500).json({ message: "AWS EC2 is up and running" });
     }
   });
   app.listen(3000);

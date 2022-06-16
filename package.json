@@ -11,12 +11,8 @@
     "http": "node handler.js",
     "test:Db": "docker-compose up -d && npx query.js",
     "test": "npx autocannon -c 1000 -d 30 --renderStatusCodes --workers 10  localhost:8080",
-    "dev": "pm2 start proxy.js",
-    "dev:cluster": "pm2 start proxyClusters.js",
-    "start": "npx pm2 start proxy.js",
-    "start:cluster": "npx pm2 start proxyClusters.js",
-    "stop": "npx pm2 delete proxy",
-    "stop:Db": "npx pm2 delete proxyClusters"
+    "start": "node proxy.js",
+    "start:cluster": "node proxyClusters.js"
   },
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.110.0",
@@ -25,8 +21,7 @@
     "express": "^4.18.1",
     "mmap-object": "^1.5.0",
     "mongoose": "^6.3.3",
-    "node-tcp-proxy": "^0.0.27",
-    "pm2": "^5.2.0"
+    "node-tcp-proxy": "^0.0.27"
   },
   "devDependencies": {
     "@types/node": "^17.0.44",
