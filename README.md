@@ -20,7 +20,7 @@ The idea here is to make something similar to a Serverless database/application 
 - **"--proxyToIp"** : ip that the proxy server will redirect to (default is localhost);
 - **"--maxEc2Idle"** : max idle time (in minutes) allowed from proxy before shutting down EC2. You can pass float numbers values.(default is 0.1 witch is 6 seconds for testing purposes);
 
-## Testing
+## Testing locally
 
 #### Run the proxy server
 
