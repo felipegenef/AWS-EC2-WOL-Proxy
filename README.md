@@ -6,7 +6,7 @@ The idea here is to make something similar to a Serverless database/application 
 ## Usage
 
 - Clone/fork this package;
-- Give it a like 😆🧐;
+- Give it a star 😆🧐;
 - customize this script on the turn on/off EC2s.
   <img src="/assets/uncomment1.png" />
   <img src="/assets/uncomment2.png" />
