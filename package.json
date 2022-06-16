@@ -10,7 +10,7 @@
     "cluster": "node proxyClusters.js",
     "http": "node handler.js",
     "test:Db": "docker-compose up -d && npx query.js",
-    "test": "npx autocannon -c 1000 -a 1000000 --renderStatusCodes --latency --workers 10  localhost:8080",
+    "test": "npx autocannon -c 5000 -a 100000 --renderStatusCodes --latency --workers 10 -t 80  http://52.207.186.139:8080",
     "start": "node proxy.js",
     "start:cluster": "node proxyClusters.js"
   },
