@@ -38,21 +38,17 @@ if (cluster.isMaster) {
     // console.log("Success", data.StartingInstances);
     const date = new Date();
     // Check if intance is alreadyUp
-    /**
-     * while(instance not up){
-     *
-     *     const data = await ec2Client.send(new DescribeInstancesCommand({}));
-     *      console.log("Success", JSON.stringify(data));
-     *
-     * sleep 1 second
-     *  await new Promise((resolve) => setTimeout(resolve, 1000));
-     *
-     * }
-     *
-     */
-
     // Simulates delay for instance getting up and checking it with http
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    let counter = 0;
+    while (counter != 4) {
+      counter++;
+      // const data = await ec2Client.send(new DescribeInstancesCommand({}));
+      //  console.log("Success", JSON.stringify(data));
+
+      // sleep 1 second
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
     const date2 = new Date();
     console.log(`Turn EC2 on took : ${date2.getTime() - date.getTime()}ms`);
   }
