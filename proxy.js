@@ -23,16 +23,20 @@ function parseArgumentsIntoOptions(rawArgs) {
     maxEc2Idle: args["--maxEc2Idle"] || 0.1,
   };
 }
+const instanceId = "";
 const args = parseArgumentsIntoOptions(process.argv);
 // Set the AWS Region.
-// const REGION = "REGION"; //e.g. "us-east-1"
+
 // Create anAmazon EC2 service client object.
-// const ec2Client = new EC2Client({ region: REGION ,credentials:{
-//    accessKeyId:"your key",
-//    secretAccessKey:"your secret"
-// }});
-// const paramsStart = { InstanceIds: ["INSTANCE_ID"] }; // Array of INSTANCE_IDs
-// const paramsStop = { InstanceIds: ["INSTANCE_ID"],hibernate:true }; // Array of INSTANCE_IDs
+const ec2Client = new EC2Client({
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: "your key",
+    secretAccessKey: "your secret",
+  },
+});
+const paramsStart = { InstanceIds: [instanceId] }; // Array of INSTANCE_IDs
+const paramsStop = { InstanceIds: [instanceId], hibernate: true }; // Array of INSTANCE_IDs
 let isUp = false;
 const ProxyPort = args.proxyPort;
 const ProxyToURL = args.proxyToIp;
@@ -49,15 +53,17 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
       isUp = true;
       console.log("Turning EC2 on...");
       // Input your CLI Script to awake your EC2 here
-      // const data = await ec2Client.send(new StartInstancesCommand(paramsStart));
+      await ec2Client.send(new StartInstancesCommand(paramsStart));
       // console.log("Success", data.StartingInstances);
       const date = new Date();
       // Check if intance is alreadyUp
-      let counter = 0;
-      while (counter != 4) {
-        counter++;
-        // const data = await ec2Client.send(new DescribeInstancesCommand(paramsStart));
-        //  console.log("Success", JSON.stringify(data));
+      let instanceStatus;
+      while (instanceStatus != "running") {
+        const data = await ec2Client.send(
+          new DescribeInstancesCommand(paramsStart)
+        );
+        const [firstInstance] = data.Reservations.Instances;
+        if (firstInstance) instanceStatus = firstInstance.State.Name;
 
         // sleep 1 second
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -75,7 +81,7 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
       // once EC2 Max idle time is done , turn off instance
       console.log("Server max idle time has passed.");
       console.log("Turning EC2 off...");
-      // const data = await ec2Client.send(new StopInstancesCommand(paramsStop));
+      await ec2Client.send(new StopInstancesCommand(paramsStop));
       // console.log("Success", data.StoppingInstances);
       isUp = false;
     }, maxEC2IdleTimeMs);
