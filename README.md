@@ -24,7 +24,7 @@ The idea here is to make something similar to a Serverless database/application 
 
 #### Run the proxy server
 
-With this command you are proxing all connections from localhost:27017 to localhost:8080
+With this command you are proxing all connections from localhost:8080 to localhost:3000
 
 ```bash
 npm run start
@@ -32,7 +32,7 @@ npm run start
 
 #### Or run the proxy server with clusters
 
-With this command you are proxing all connections from localhost:27017 to localhost:8080 loadbalancing between clusters
+With this command you are proxing all connections from localhost:8080 to localhost:3000 loadbalancing between clusters
 
 ```bash
 npm run start:cluster
