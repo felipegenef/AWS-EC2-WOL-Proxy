@@ -50,7 +50,7 @@ docker-compose up -d
 npm run test:Db
 ```
 
-This script will try to connect to a mongo url at localhost:8080 , but your proxy will hold for a few seconds before starts inserting data. This happens because your proxy will hold for a few seconds while turning your EC2 up before redirecting.
+This script will try to connect to a mongo url at localhost:8080 , but your proxy will hold for a few seconds before starts inserting data. This happens because your proxy will be holding requests while turning your EC2 up before redirecting.
 
 If you stop your activitiy of insertions for 6 seconds the proxy will understand that your EC2 needs to be shut down.
 
