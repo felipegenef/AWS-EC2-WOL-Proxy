@@ -1,5 +1,10 @@
 var proxy = require("node-tcp-proxy");
-const { EC2Client } = require("@aws-sdk/client-ec2");
+const {
+  EC2Client,
+  StartInstancesCommand,
+  StopInstancesCommand,
+  DescribeInstancesCommand,
+} = require("@aws-sdk/client-ec2");
 const arg = require("arg");
 function parseArgumentsIntoOptions(rawArgs) {
   const args = arg(
@@ -22,7 +27,10 @@ const args = parseArgumentsIntoOptions(process.argv);
 // Set the AWS Region.
 // const REGION = "REGION"; //e.g. "us-east-1"
 // Create anAmazon EC2 service client object.
-// const ec2Client = new EC2Client({ region: REGION });
+// const ec2Client = new EC2Client({ region: REGION ,credentials:{
+//    accessKeyId:"your key",
+//    secretAccessKey:"your secret"
+// }});
 // const paramsStart = { InstanceIds: ["INSTANCE_ID"] }; // Array of INSTANCE_IDs
 // const paramsStop = { InstanceIds: ["INSTANCE_ID"],hibernate:true }; // Array of INSTANCE_IDs
 let isUp = false;
@@ -48,7 +56,7 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
       let counter = 0;
       while (counter != 4) {
         counter++;
-        // const data = await ec2Client.send(new DescribeInstancesCommand({}));
+        // const data = await ec2Client.send(new DescribeInstancesCommand(paramsStart));
         //  console.log("Success", JSON.stringify(data));
 
         // sleep 1 second
