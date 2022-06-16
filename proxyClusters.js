@@ -5,7 +5,25 @@ const numCPUs = require("os").cpus().length;
 const NumberOfObjects = 3;
 const MaxSizeOfKeysInKB = 10;
 const Shared = require("mmap-object");
-
+const arg = require("arg");
+function parseArgumentsIntoOptions(rawArgs) {
+  const args = arg(
+    {
+      "--proxyPort": Number,
+      "--proxyToIp": String,
+      "--proxyToPort": Number,
+      "--maxEc2Idle": Number,
+    },
+    { argv: rawArgs.slice(2) }
+  );
+  return {
+    proxyPort: args["--proxyPort"] || 8080,
+    proxyToIp: args["--proxyToIp"] || "localhost",
+    proxyToPort: args["--proxyToPort"] || 3000,
+    maxEc2Idle: args["--maxEc2Idle"] || 0.1,
+  };
+}
+const args = parseArgumentsIntoOptions(process.argv);
 // Set the AWS Region.
 // const REGION = "REGION"; //e.g. "us-east-1"
 // Create anAmazon EC2 service client object.
@@ -13,11 +31,11 @@ const Shared = require("mmap-object");
 // const paramsStart = { InstanceIds: ["INSTANCE_ID"] }; // Array of INSTANCE_IDs
 // const paramsStop = { InstanceIds: ["INSTANCE_ID"],hibernate:true }; // Array of INSTANCE_IDs
 
-const ProxyPort = 8080;
-const DBURL = "localhost";
-const DBPORT = 3000;
+const ProxyPort = args.proxyPort;
+const ProxyToURL = args.proxyToIp;
+const ProxyToPort = args.proxyToPort;
 //  6 seconds , but you can set any time you want
-const MaxEC2MinutesIdleTime = 0.1;
+const MaxEC2MinutesIdleTime = args.maxEc2Idle;
 const maxEC2IdleTimeMs = 60000 * MaxEC2MinutesIdleTime;
 
 let turnoff;
@@ -105,7 +123,7 @@ if (cluster.isMaster) {
   console.log("Worker proxy ", "running on", "[", `${process.pid}`, "]");
   const ProcessDB = new Shared.Open("./ProxyWorkersDB/processDB");
 
-  proxy.createProxy(ProxyPort, DBURL, DBPORT, {
+  proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
     upstream: async function (context, data) {
       // Check if AWS EC2 is not up
       if (!ProcessDB["isUp"]) {

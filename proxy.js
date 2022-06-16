@@ -1,5 +1,24 @@
 var proxy = require("node-tcp-proxy");
 const { EC2Client } = require("@aws-sdk/client-ec2");
+const arg = require("arg");
+function parseArgumentsIntoOptions(rawArgs) {
+  const args = arg(
+    {
+      "--proxyPort": Number,
+      "--proxyToIp": String,
+      "--proxyToPort": Number,
+      "--maxEc2Idle": Number,
+    },
+    { argv: rawArgs.slice(2) }
+  );
+  return {
+    proxyPort: args["--proxyPort"] || 8080,
+    proxyToIp: args["--proxyToIp"] || "localhost",
+    proxyToPort: args["--proxyToPort"] || 3000,
+    maxEc2Idle: args["--maxEc2Idle"] || 0.1,
+  };
+}
+const args = parseArgumentsIntoOptions(process.argv);
 // Set the AWS Region.
 // const REGION = "REGION"; //e.g. "us-east-1"
 // Create anAmazon EC2 service client object.
@@ -7,21 +26,20 @@ const { EC2Client } = require("@aws-sdk/client-ec2");
 // const paramsStart = { InstanceIds: ["INSTANCE_ID"] }; // Array of INSTANCE_IDs
 // const paramsStop = { InstanceIds: ["INSTANCE_ID"],hibernate:true }; // Array of INSTANCE_IDs
 let isUp = false;
-const ProxyPort = 8080;
-const DBURL = "localhost";
-const DBPORT = 3000;
+const ProxyPort = args.proxyPort;
+const ProxyToURL = args.proxyToIp;
+const ProxyToPort = args.proxyToPort;
 //  6 seconds , but you can set any time you want
-const MaxEC2MinutesIdleTime = 0.1;
+const MaxEC2MinutesIdleTime = args.maxEc2Idle;
 const maxEC2IdleTimeMs = 60000 * MaxEC2MinutesIdleTime;
 console.log(`Process pid ${process.pid}`);
 let turnoff;
-proxy.createProxy(ProxyPort, DBURL, DBPORT, {
+proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
   upstream: async function (context, data) {
     // Check if AWS EC2 is not up
     if (!isUp) {
       isUp = true;
       console.log("Turning EC2 on...");
-      await axios.get("/turnEC2");
       // Input your CLI Script to awake your EC2 here
       // const data = await ec2Client.send(new StartInstancesCommand(paramsStart));
       // console.log("Success", data.StartingInstances);
