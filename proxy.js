@@ -45,7 +45,9 @@ const ProxyToPort = args.proxyToPort;
 const MaxEC2MinutesIdleTime = args.maxEc2Idle;
 const maxEC2IdleTimeMs = 60000 * MaxEC2MinutesIdleTime;
 console.log(
-  `Process pid ${process.pid} is running tcp proxy from localhost:${ProxyPort} to ${ProxyToURL}:${ProxyToPort}`
+  `[${new Date().toISOString()}] Process pid ${
+    process.pid
+  } is running tcp proxy from localhost:${ProxyPort} to ${ProxyToURL}:${ProxyToPort}`
 );
 let turnoff;
 proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
@@ -54,7 +56,7 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
     if (!isUp) {
       isUp = true;
       let instanceStatus;
-      console.log("Turning EC2 on...");
+      console.log(`[${new Date().toISOString()}] ` + "Turning EC2 on...");
       // check if EC2 is not on stopping status
       // while (instanceStatus.toUpperCase() != "stopped".toUpperCase()) {
       //   const data = await ec2Client.send(
@@ -88,7 +90,11 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
       // }
 
       const date2 = new Date();
-      console.log(`Turn EC2 on took : ${date2.getTime() - date.getTime()}ms`);
+      console.log(
+        `[${new Date().toISOString()}] Turn EC2 on took : ${
+          date2.getTime() - date.getTime()
+        }ms`
+      );
     }
     // erase old EC2 idle live timer
     if (turnoff) {
@@ -97,8 +103,10 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
     // create new EC2 idle live timer
     turnoff = setTimeout(async () => {
       // once EC2 Max idle time is done , turn off instance
-      console.log("Server max idle time has passed.");
-      console.log("Turning EC2 off...");
+      console.log(
+        `[${new Date().toISOString()}] ` + "Server max idle time has passed."
+      );
+      console.log(`[${new Date().toISOString()}] ` + "Turning EC2 off...");
       // await ec2Client.send(new StopInstancesCommand(paramsStop));
       // console.log("Success", data.StoppingInstances);
       isUp = false;
