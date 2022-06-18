@@ -13,17 +13,18 @@ function parseArgumentsIntoOptions(rawArgs) {
       "--proxyToIp": String,
       "--proxyToPort": Number,
       "--maxEc2Idle": Number,
+      "--ec2ids": String,
     },
     { argv: rawArgs.slice(2) }
   );
   return {
     proxyPort: args["--proxyPort"] || 8080,
     proxyToIp: args["--proxyToIp"] || "localhost",
-    proxyToPort: args["--proxyToPort"] || 3000,
+    proxyToPort: args["--proxyToPort"] || 3001,
     maxEc2Idle: args["--maxEc2Idle"] || 0.1,
+    ec2ids: args["--ec2ids"] || "",
   };
 }
-const instanceId = "";
 const args = parseArgumentsIntoOptions(process.argv);
 // Set the AWS Region.
 
@@ -35,8 +36,8 @@ const ec2Client = new EC2Client({
     secretAccessKey: "your secret",
   },
 });
-const paramsStart = { InstanceIds: [instanceId] }; // Array of INSTANCE_IDs
-const paramsStop = { InstanceIds: [instanceId], hibernate: true }; // Array of INSTANCE_IDs
+const paramsStart = { InstanceIds: args.ec2ids.split(",") }; // Array of INSTANCE_IDs
+const paramsStop = { InstanceIds: args.ec2ids.split(","), hibernate: true }; // Array of INSTANCE_IDs
 let isUp = false;
 const ProxyPort = args.proxyPort;
 const ProxyToURL = args.proxyToIp;
@@ -88,7 +89,7 @@ proxy.createProxy(ProxyPort, ProxyToURL, ProxyToPort, {
       //   // sleep 1 second
       //   await new Promise((resolve) => setTimeout(resolve, 1000));
       // }
-
+      await new Promise((resolve) => setTimeout(resolve, 20000));
       const date2 = new Date();
       console.log(
         `[${new Date().toISOString()}] Turn EC2 on took : ${

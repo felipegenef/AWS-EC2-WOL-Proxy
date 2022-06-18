@@ -19,6 +19,7 @@ The idea here is to make something similar to a Serverless database/application 
 - **"--proxyToPort"** : port that the proxy server will redirect to **(default is 3000)**;
 - **"--proxyToIp"** : ip that the proxy server will redirect to **(default is localhost)**;
 - **"--maxEc2Idle"** : max idle time (in minutes) allowed from proxy before shutting down EC2. You can pass float numbers values.**(default is 0.1 witch is 6 seconds for testing purposes)**;
+- **--ec2ids** : Ec2 Ips to turn on and off. You can pass only one or many separete by "," **(id1 or di1,id2,id3)**ss
 
 ## Testing locally
 
